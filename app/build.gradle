@@ -39,4 +39,7 @@ dependencies {
 
     // GSON
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
+    // Logging
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.0'
 }
