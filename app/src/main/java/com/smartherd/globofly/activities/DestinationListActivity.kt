@@ -39,7 +39,7 @@ class DestinationListActivity : AppCompatActivity() {
 
 		val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
 
-        val requestCall = destinationService.getDestinationList()
+        val requestCall = destinationService.getDestinationList("India") // Pass null and see result
 
         requestCall.enqueue(object: Callback<List<Destination>> {
 
