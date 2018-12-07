@@ -39,7 +39,11 @@ class DestinationListActivity : AppCompatActivity() {
 
 		val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
 
-        val requestCall = destinationService.getDestinationList("India") // Pass null and see result
+        val filter = HashMap<String, String>()
+        filter["country"] = "India"
+        filter["count"] = "1"
+
+        val requestCall = destinationService.getDestinationList(filter)
 
         requestCall.enqueue(object: Callback<List<Destination>> {
 
