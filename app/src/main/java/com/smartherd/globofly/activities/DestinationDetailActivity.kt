@@ -12,6 +12,7 @@ import com.smartherd.globofly.services.DestinationService
 import com.smartherd.globofly.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_destiny_detail.*
 import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.Response
 
 
@@ -58,12 +59,17 @@ class DestinationDetailActivity : AppCompatActivity() {
                         collapsing_toolbar.title = destination.city
                     }
                 } else {
-                    Toast.makeText(this@DestinationDetailActivity, "Failed to retrieve details", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DestinationDetailActivity, "Failed to retrieve details", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
             override fun onFailure(call: Call<Destination>, t: Throwable) {
-                Toast.makeText(this@DestinationDetailActivity, "Failed to retrieve details " + t.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@DestinationDetailActivity,
+                    "Failed to retrieve details " + t.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
     }
@@ -76,15 +82,28 @@ class DestinationDetailActivity : AppCompatActivity() {
             val description = et_description.text.toString()
             val country = et_country.text.toString()
 
-            // To be replaced by retrofit code
-            val destination = Destination()
-            destination.id = id
-            destination.city = city
-            destination.description = description
-            destination.country = country
+            val destinationService = ServiceBuilder.buildService(DestinationService::class.java)
+            val requestCall = destinationService.updateDestination(id, city, description, country)
 
-            SampleData.updateDestination(destination);
-            finish() // Move back to DestinationListActivity
+            requestCall.enqueue(object: Callback<Destination> {
+
+                override fun onResponse(call: Call<Destination>, response: Response<Destination>) {
+                    if (response.isSuccessful) {
+                        finish() // Move back to DestinationListActivity
+                        var updatedDestination = response.body() // Use it or ignore It
+                        Toast.makeText(this@DestinationDetailActivity,
+                            "Item Updated Successfully", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@DestinationDetailActivity,
+                            "Failed to update item", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<Destination>, t: Throwable) {
+                    Toast.makeText(this@DestinationDetailActivity,
+                        "Failed to update item", Toast.LENGTH_SHORT).show()
+                }
+            })
         }
     }
 
