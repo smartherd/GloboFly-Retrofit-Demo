@@ -2,9 +2,7 @@ package com.smartherd.globofly.services
 
 import com.smartherd.globofly.models.Destination
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.QueryMap
+import retrofit2.http.*
 
 interface DestinationService {
 
@@ -13,4 +11,7 @@ interface DestinationService {
 
     @GET("destination/{id}")
     fun getDestination(@Path("id") id: Int): Call<Destination>
+
+    @POST("destination")
+    fun addDestination(@Body newDestination: Destination): Call<Destination>
 }
